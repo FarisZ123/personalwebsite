@@ -1,145 +1,66 @@
+import { useEffect } from "react";
+import React from "react";
+import { VscHome, VscArchive, VscAccount, VscSettingsGear } from 'react-icons/vsc';
 import "../App.css";
-import SplitText from "../components/SplitText";
-import AnimatedContent from "../components/AnimatedContent";
-import { useRef, useEffect, useState } from "react";
-import ScrollArrow from "../components/ScrollArrow";
+import "../pages/Home.css";
+import Aurora from "../components/Aurora";
+import ShinyText from "../assets/ShinyText";
+import Dock from "../assets/Dock";
 
-interface Project {
-  title: string;
-  description: string;
-  link: string;
+interface HomeProps {
+  setIsProjectsPage: React.Dispatch<React.SetStateAction<boolean>>;
 }
+const items = [
+  { icon: <VscHome size={18} color="ffffff" />, label: 'Home', onClick: () => alert('Home!') },
+  { icon: <VscArchive size={18} color="ffffff" />, label: 'Archive', onClick: () => alert('Archive!') },
+  { icon: <VscAccount size={18} color="ffffff" />, label: 'Profile', onClick: () => alert('Profile!') },
+  { icon: <VscSettingsGear size={18} color="ffffff" />, label: 'Settings', onClick: () => alert('Settings!') },
+];
 
-interface ProjectsPageProps {
-  setIsProjectsPage: (is: boolean) => void;
-}
-
-const ProjectsPage = ({ setIsProjectsPage }: ProjectsPageProps) => {
-  const projectsRef = useRef<HTMLDivElement>(null);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
-
-  const handleScrollDown = () => {
-    const projectsTop = projectsRef.current?.offsetTop || 0;
-    const stopPosition = projectsTop - window.innerHeight * 0.2;
-
-    window.scrollTo({
-      top: stopPosition,
-      behavior: "smooth",
-    });
-    setIsScrolled(true);
-  };
-
-  const [triggerReset, setTriggerReset] = useState(false);
-
-  const handleScrollUp = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-    setIsScrolled(false);
-    setTriggerReset((prev) => !prev); // Toggle to trigger reset
-  };
-
+const Home: React.FC<HomeProps> = ({ setIsProjectsPage }) => {
   useEffect(() => {
-    setIsProjectsPage(true);
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const scrollDirection = currentScrollY > lastScrollY ? "down" : "up";
-      setLastScrollY(currentScrollY);
-
-      // Going down
-      if (scrollDirection === "down" && currentScrollY > 50 && !isScrolled) {
-        handleScrollDown();
-      }
-
-      // Going up - hide nav when near top
-      if (scrollDirection === "up" && currentScrollY < 30) {
-        handleScrollUp();
-        setIsScrolled(false);
-        document.querySelector(".nav")?.classList.remove("nav-visible");
-      }
-
-      // Show nav only when scrolled down past threshold
-      if (currentScrollY > 100) {
-        document.querySelector(".nav")?.classList.add("nav-visible");
-      } else {
-        document.querySelector(".nav")?.classList.remove("nav-visible");
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [isScrolled, lastScrollY]);
-
-  const projects: Project[] = [
-    {
-      title: "Where it all began... 💕",
-      description:
-        "I was genuinely really worried if this was good enough for a proposal 💀",
-      link: "/proposal",
-    },
-    {
-      title: "Love at First Sight...? 😳",
-      description: "I didn't know I could feel so close to someone so far...",
-      link: "/scrapbook",
-    },
-    {
-      title: "Under Construction 🚧",
-      description: "New project otw!!!",
-      link: "/openwhen",
-    },
-  ];
+    setIsProjectsPage(false);
+  }, [setIsProjectsPage]);
 
   return (
-    <div className="projects-page" style={{ background: "#f6e9d9" }}>
-      {/* Hero section that shows/hides based on scroll */}
-      <div className={`hero-section ${isScrolled ? "hidden" : ""}`}>
-        <div className="container">
-          <h1 className="home-title" style={{ color: "#4c643b" }}>
-            <SplitText
-              text="For you, Puteriku 💝"
-              className="custom-split-text playfair-font"
-              delay={100}
-              duration={0.6}
-              ease="power3.out"
-              splitType="chars"
-              from={{ opacity: 0, y: 40 }}
-              to={{ opacity: 1, y: 0 }}
-              threshold={0.1}
-              rootMargin="-100px"
-              textAlign="center"
-            />
-          </h1>
-          <ScrollArrow onClick={handleScrollDown} />
-        </div>
-      </div>
-      <div className="projects-fullview" ref={projectsRef}>
-        <div className="projects-grid">
-          {projects.map((p, index) => (
-            <AnimatedContent
-              key={`${index}-${triggerReset}`}
-              distance={60}
-              direction="vertical"
-              delay={index * 0.2} // stagger manually
-              animateOpacity
-              reset={triggerReset}
-            >
-              <div className="project-card">
-                <h2>{p.title}</h2>
-                <p>{p.description}</p>
-                {p.link && (
-                  <a href={p.link} className="project-link">
-                    View →
-                  </a>
-                )}
-              </div>
-            </AnimatedContent>
-          ))}
-        </div>
-      </div>
-    </div>
+    
+
+<div style={{ position: "relative", minHeight: "100vh", overflow: "hidden" }}>
+  <div
+    style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      zIndex: 0,
+      pointerEvents: "none",
+      background: "#141734",
+    }}
+  >
+    <Aurora
+      colorStops={["#703f6e", "#a2f0c3", "#2a5178"]}
+      blend={0.5}
+      amplitude={1.0}
+      speed={0.5}
+    />
+  </div>
+
+  <div style={{ position: "relative", zIndex: 1, textAlign: "center", paddingTop: "20vh" }}>
+      <ShinyText className="intro-text" text="Hi, My Name is" /> <br />
+      <ShinyText className="intro-text" text="Faris Zulhazmi" /> <br /> <br />
+      <ShinyText className="intro-subtext" text="Welcome to my personal website" />
+  </div>
+    <Dock 
+    items={items}
+    panelHeight={68}
+    baseItemSize={50}
+    magnification={70}
+  />
+</div>
+
   );
 };
 
-export default ProjectsPage;
+
+export default Home;
